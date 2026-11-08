@@ -112,6 +112,7 @@
     transition: background .2s, color .2s;
   }
   .btn:hover { background: var(--ink); color: var(--bg); }
+  .btn[hidden] { display: none; }
   .btn.primary { background: var(--ink); color: var(--bg); }
   .btn.primary:hover { background: var(--brass); border-color: var(--brass); color: #fff; }
   .btn:focus-visible { outline: 3px solid var(--brass); outline-offset: 3px; }
@@ -153,8 +154,7 @@
   <header class="hero">
     <p class="together">Together with their families</p>
     <h1>Abhijith Jayaseelan <span class="amp">&amp;</span> Kavya Calligaurishankar</h1>
-    <p class="date-big">Saturday, 13 February 2027</p>
-    <p class="place-small">The Orangery, Kew Gardens, London</p>
+    <p class="date-big">Monday, 23 November 2026</p>
     <div class="scroll-cue" aria-hidden="true"></div>
   </header>
 
@@ -168,25 +168,17 @@
     <h2>The day</h2>
     <ul class="timeline">
       <li><time>4:00 pm</time><div><strong>Ceremony</strong><small>Please be seated by 3:45 pm</small></div></li>
-      <li><time>5:30 pm</time><div><strong>Drinks &amp; canapés</strong><small>In the garden</small></div></li>
-      <li><time>7:00 pm</time><div><strong>Dinner</strong><small>The Orangery</small></div></li>
+      <li><time>5:30 pm</time><div><strong>Drinks &amp; canapés</strong></div></li>
+      <li><time>7:00 pm</time><div><strong>Dinner</strong></div></li>
       <li><time>9:00 pm</time><div><strong>Dancing</strong><small>Until late</small></div></li>
     </ul>
   </section>
 
   <section>
     <h2>Where</h2>
-    <p class="lead">The Orangery<br>Kew Gardens, Richmond<br>London TW9 3AB</p>
-    <a class="btn" id="mapLink" href="#" target="_blank" rel="noopener">Open in Google Maps</a>
+    <p class="lead" id="venueText">Venue details to follow.</p>
+    <a class="btn" id="mapLink" href="#" target="_blank" rel="noopener" hidden>Open in Google Maps</a>
     <a class="btn" id="calLink" href="#" target="_blank" rel="noopener">Add to calendar</a>
-  </section>
-
-  <section>
-    <h2>Will you come?</h2>
-    <p class="lead">Please let us know by 1 January 2027.</p>
-    <a class="btn primary" id="rsvpYes" href="#" target="_blank" rel="noopener">Yes, I’ll be there</a>
-    <a class="btn" id="rsvpNo" href="#" target="_blank" rel="noopener">Sorry, I can’t make it</a>
-    <p class="muted" style="margin-top:1rem;font-size:.95rem">Your reply opens in WhatsApp and goes straight to us.</p>
   </section>
 
   <footer>With love, Abhijith &amp; Kavya</footer>
@@ -196,10 +188,9 @@
   // ====== EDIT YOUR DETAILS HERE ======
   var INVITE = {
     couple: "Abhijith Jayaseelan & Kavya Calligaurishankar",
-    start: "2027-02-13T16:00:00",      // ceremony start (local time)
-    end:   "2027-02-13T23:00:00",
-    venue: "The Orangery, Kew Gardens, Richmond, London TW9 3AB",
-    whatsapp: "447000000000"           // RSVP number: country code + number, digits only
+    start: "2026-11-23T16:00:00",      // ceremony start (local time)
+    end:   "2026-11-23T23:00:00",
+    venue: ""                         // add the address here when you have it
   };
   // ====================================
 
@@ -232,15 +223,15 @@
   }
   var start = new Date(INVITE.start), end = new Date(INVITE.end);
 
-  document.getElementById('mapLink').href =
-    'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(INVITE.venue);
+  if (INVITE.venue) {
+    var mapLink = document.getElementById('mapLink');
+    mapLink.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(INVITE.venue);
+    mapLink.hidden = false;
+    document.getElementById('venueText').textContent = INVITE.venue;
+  }
   document.getElementById('calLink').href =
     'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(INVITE.couple + ' – Wedding') +
     '&dates=' + icsDate(start) + '/' + icsDate(end) + '&location=' + encodeURIComponent(INVITE.venue);
-
-  function wa(msg) { return 'https://wa.me/' + INVITE.whatsapp + '?text=' + encodeURIComponent(msg); }
-  document.getElementById('rsvpYes').href = wa('Hi! Yes, I’ll be there at your wedding. How many of us: ');
-  document.getElementById('rsvpNo').href = wa('Hi! Sorry, I can’t make it to your wedding, but I’m sending all my love.');
 
   var cd = document.getElementById('countdown');
   function tick() {
